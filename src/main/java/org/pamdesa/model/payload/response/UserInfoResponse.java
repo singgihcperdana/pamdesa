@@ -1,4 +1,4 @@
-package org.pamdesa.payload.response;
+package org.pamdesa.model.payload.response;
 
 import lombok.Builder;
 import lombok.Data;

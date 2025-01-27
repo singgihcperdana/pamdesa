@@ -1,7 +1,6 @@
 package org.pamdesa.helper;
 
-import org.pamdesa.payload.response.Response;
-import org.springframework.http.HttpStatus;
+import org.pamdesa.model.payload.response.Response;
 
 public class ResponseHelper {
 

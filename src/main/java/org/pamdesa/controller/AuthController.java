@@ -2,10 +2,10 @@ package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.ResponseHelper;
-import org.pamdesa.payload.request.LoginRequest;
-import org.pamdesa.payload.response.Response;
+import org.pamdesa.model.payload.request.LoginRequest;
+import org.pamdesa.model.payload.response.Response;
 import org.pamdesa.helper.JwtHelper;
-import org.pamdesa.payload.response.UserInfoResponse;
+import org.pamdesa.model.payload.response.UserInfoResponse;
 import org.pamdesa.repository.UserRepository;
 import org.pamdesa.service.UserService;
 import org.pamdesa.service.ValidTokenService;

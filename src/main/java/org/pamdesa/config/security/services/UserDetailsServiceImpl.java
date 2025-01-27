@@ -1,4 +1,4 @@
-package org.pamdesa.security.services;
+package org.pamdesa.config.security.services;
 
 import org.pamdesa.model.entity.User;
 import org.pamdesa.repository.UserRepository;

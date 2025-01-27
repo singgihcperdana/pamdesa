@@ -6,7 +6,7 @@ import org.pamdesa.annotation.MetaData;
 import org.pamdesa.annotation.MetaDatas;
 import org.pamdesa.model.exception.ClientException;
 import org.pamdesa.model.exception.JwtAuthenticationException;
-import org.pamdesa.payload.response.Response;
+import org.pamdesa.model.payload.response.Response;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

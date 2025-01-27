@@ -1,8 +1,8 @@
-package org.pamdesa.controller.customer;
+package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.model.constant.AppPath;
-import org.pamdesa.payload.response.UserInfoResponse;
+import org.pamdesa.model.payload.response.UserInfoResponse;
 import org.pamdesa.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

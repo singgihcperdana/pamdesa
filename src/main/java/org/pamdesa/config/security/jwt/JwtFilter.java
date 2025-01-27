@@ -1,4 +1,4 @@
-package org.pamdesa.security.jwt;
+package org.pamdesa.config.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.JsonHelper;

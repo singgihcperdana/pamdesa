@@ -1,4 +1,4 @@
-package org.pamdesa.payload.response;
+package org.pamdesa.model.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

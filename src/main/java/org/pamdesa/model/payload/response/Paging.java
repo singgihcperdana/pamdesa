@@ -1,11 +1,11 @@
-package org.pamdesa.payload.response;
+package org.pamdesa.model.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.pamdesa.payload.request.SortBy;
+import org.pamdesa.model.payload.request.SortBy;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.pamdesa.payload.response;
+package org.pamdesa.model.payload.response;
 
 public class MessageResponse {
 	private String message;

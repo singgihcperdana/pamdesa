@@ -1,4 +1,4 @@
-package org.pamdesa.payload.request;
+package org.pamdesa.model.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
