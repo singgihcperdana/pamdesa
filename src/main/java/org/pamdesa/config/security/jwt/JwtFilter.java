@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -43,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", "/api/auth/login"};
 
-    private final List<String> noAuthorizedPaths = List.of("/api/auth/current");
+    private final String[] nonAuthorizedPaths = new String[]{"/api/auth/current"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -92,8 +93,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
-        boolean isNonAuthorizedPath = noAuthorizedPaths.stream()
-                .anyMatch(noAuthorizedPath -> pathMatcher.match(noAuthorizedPath , requestPath));
+        boolean isNonAuthorizedPath = Arrays.stream(nonAuthorizedPaths)
+                .anyMatch(noAuthorizedPath -> pathMatcher.match(noAuthorizedPath, requestPath));
         if(isNonAuthorizedPath) {
             return true;
         }
