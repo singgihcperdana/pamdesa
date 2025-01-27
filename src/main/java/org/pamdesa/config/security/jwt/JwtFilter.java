@@ -75,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtHelper.validateToken(jwt, username)) {
                 var userDetails = userDetailsService.loadUserByUsername(username);
 
-                if(!isPathAuthorized(userDetails, request.getServletPath(), request.getMethod())) {
+                if(!isAuthorizedPath(userDetails, request.getServletPath(), request.getMethod())) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(jsonHelper.toJson(ResponseHelper.status(HttpStatus.FORBIDDEN.value(),
                             HttpStatus.FORBIDDEN.name())));
@@ -91,10 +91,10 @@ public class JwtFilter extends OncePerRequestFilter {
         }
     }
 
-    boolean isPathAuthorized(UserDetails userDetails, String requestPath, String requestMethod) {
-        boolean isNoAuthorizedPath = noAuthorizedPaths.stream()
+    boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
+        boolean isNonAuthorizedPath = noAuthorizedPaths.stream()
                 .anyMatch(noAuthorizedPath -> pathMatcher.match(noAuthorizedPath , requestPath));
-        if(isNoAuthorizedPath) {
+        if(isNonAuthorizedPath) {
             return true;
         }
 
