@@ -2,6 +2,7 @@ package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.ResponseHelper;
+import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.response.Response;
 import org.pamdesa.helper.JwtHelper;
@@ -22,7 +23,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Validated
 public class AuthController {
@@ -40,7 +40,7 @@ public class AuthController {
     private final UserService userService;
 
 
-    @PostMapping("/login")
+    @PostMapping(AppPath.LOGIN)
     public Response<String> login(@Validated @RequestBody LoginRequest request) {
         try {
             Authentication authenticate = authenticationManager.authenticate(
@@ -59,12 +59,12 @@ public class AuthController {
         }
     }
 
-    @GetMapping("current")
+    @GetMapping(AppPath.CURRENT)
     public Response<UserInfoResponse> current() {
         return ResponseHelper.ok(userService.getCurrent());
     }
 
-    @PostMapping("/logout")
+    @PostMapping(AppPath.LOGOUT)
     public Response<String> logout(@RequestHeader("token") String token) {
         String cleanToken = token.replace("Bearer ", "");
         validTokenService.deleteByToken(cleanToken);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.JsonHelper;
 import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.helper.ResponseHelper;
+import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.enums.UserRole;
 import org.pamdesa.repository.RoleEndpointRepository;
@@ -42,9 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", "/api/auth/login"};
+    private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", AppPath.LOGIN};
 
-    private final String[] nonAuthorizedPaths = new String[]{"/api/auth/current"};
+    private final String[] nonAuthorizedPaths = new String[]{AppPath.CURRENT, AppPath.LOGOUT};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
