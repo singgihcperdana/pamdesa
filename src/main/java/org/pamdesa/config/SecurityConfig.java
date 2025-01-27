@@ -1,6 +1,7 @@
 package org.pamdesa.config;
 
 import lombok.RequiredArgsConstructor;
+import org.pamdesa.model.enums.UserRole;
 import org.pamdesa.security.jwt.AuthEntryPointJwt;
 import org.pamdesa.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;

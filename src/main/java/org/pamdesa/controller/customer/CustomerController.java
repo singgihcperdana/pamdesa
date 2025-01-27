@@ -1,24 +1,31 @@
 package org.pamdesa.controller.customer;
 
 import lombok.RequiredArgsConstructor;
+import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.payload.response.UserInfoResponse;
 import org.pamdesa.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.pamdesa.model.constant.AppPath.CUSTOMER_ORDER;
+
 @RestController
-@RequestMapping("/api/customer")
 @RequiredArgsConstructor
 public class CustomerController {
 
     private final UserService userService;
 
-    @GetMapping("/hello")
+    @GetMapping(AppPath.CUSTOMER_HELLO)
     public ResponseEntity<String> getHelloPage() {
         UserInfoResponse current = userService.getCurrent();
         return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
+    }
+
+    @GetMapping(CUSTOMER_ORDER)
+    public ResponseEntity<String> getHelloPage(@PathVariable("id") String id) {
+        return ResponseEntity.ok("order " + id);
     }
 
 }

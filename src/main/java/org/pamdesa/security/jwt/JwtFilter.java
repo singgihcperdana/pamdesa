@@ -3,15 +3,19 @@ package org.pamdesa.security.jwt;
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.JsonHelper;
 import org.pamdesa.helper.JwtHelper;
+import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.enums.ErrorCode;
-import org.pamdesa.payload.response.Response;
+import org.pamdesa.model.enums.UserRole;
+import org.pamdesa.repository.RoleEndpointRepository;
 import org.pamdesa.service.ValidTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +36,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     private final JsonHelper jsonHelper;
+
+    private final RoleEndpointRepository roleEndpointRepository;
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -56,15 +65,21 @@ public class JwtFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (!tokenService.isTokenValid(jwt)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                Response responseError = Response.builder().code(HttpStatus.UNAUTHORIZED.value())
-                        .status(HttpStatus.UNAUTHORIZED.name())
-                        .build();
-                response.getWriter().write(jsonHelper.toJson(responseError));
+                response.getWriter().write(jsonHelper.toJson(ResponseHelper.status(HttpStatus.UNAUTHORIZED.value(),
+                        HttpStatus.UNAUTHORIZED.name())));
                 return;
             }
 
             if (jwtHelper.validateToken(jwt, username)) {
                 var userDetails = userDetailsService.loadUserByUsername(username);
+
+                if(!isPathAuthorized(userDetails, request.getServletPath(), request.getMethod())) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write(jsonHelper.toJson(ResponseHelper.status(HttpStatus.FORBIDDEN.value(),
+                            HttpStatus.FORBIDDEN.name())));
+                    return;
+                }
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -72,6 +87,20 @@ public class JwtFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         }
+    }
+
+    boolean isPathAuthorized(UserDetails userDetails, String requestPath, String requestMethod) {
+        List<UserRole> userRoles = userDetails.getAuthorities().stream()
+                .map(role -> UserRole.valueOf(role.getAuthority()) )
+                .toList();
+
+        return roleEndpointRepository.findPathsByRoleIn(userRoles).stream()
+                .anyMatch(allowedPath -> {
+                    if (pathMatcher.match(allowedPath.getPath(), requestPath)) {
+                        return allowedPath.getMethod().equalsIgnoreCase(requestMethod);
+                    }
+                    return false;
+                });
     }
 
 }
