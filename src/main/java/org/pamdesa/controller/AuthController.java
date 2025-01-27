@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +40,6 @@ public class AuthController {
 
     private final UserService userService;
 
-
     @PostMapping(AppPath.LOGIN)
     public Response<String> login(@Validated @RequestBody LoginRequest request) {
         try {
@@ -51,9 +49,6 @@ public class AuthController {
             String token = jwtHelper.generateToken(request.getUsername());
             LocalDateTime expirationTime = LocalDateTime.ofInstant(
                     Instant.ofEpochMilli(jwtHelper.getTokenExpiration(token)), ZoneId.systemDefault());
-//            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-//                    userDetails, null, userDetails.getAuthorities());
-//            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticate);
             userRepository.findByUsername(userDetails.getUsername())
                     .ifPresent(user -> tokenService.saveToken(token, expirationTime, user));
