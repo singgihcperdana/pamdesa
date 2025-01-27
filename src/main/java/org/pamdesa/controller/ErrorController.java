@@ -2,8 +2,6 @@ package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pamdesa.annotation.MetaData;
-import org.pamdesa.annotation.MetaDatas;
 import org.pamdesa.model.exception.ClientException;
 import org.pamdesa.model.exception.JwtAuthenticationException;
 import org.pamdesa.model.payload.response.Response;
@@ -21,10 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.*;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import java.lang.reflect.Field;
 import java.util.*;
 
 @ControllerAdvice
@@ -111,19 +105,6 @@ public class ErrorController {
     response.setErrors(from(e.getBindingResult(), messageSource));
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-  }
-
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<Response<Object>> constraintViolationException(ConstraintViolationException e) {
-    log.warn(ConstraintViolationException.class.getName(), e);
-
-    Response<Object> response = new Response<>();
-    response.setCode(HttpStatus.BAD_REQUEST.value());
-    response.setStatus(HttpStatus.BAD_REQUEST.name());
-    response.setErrors(from(e.getConstraintViolations()));
-    response.setMetadata(Collections.singletonMap("errors", getMetaData(e.getConstraintViolations())));
-
-    return ResponseEntity.badRequest().body(response);
   }
 
   @ExceptionHandler(ResponseStatusException.class)
@@ -223,84 +204,6 @@ public class ErrorController {
     } else {
       return Collections.emptyMap();
     }
-  }
-
-  static Map<String, List<String>> from(Set<ConstraintViolation<?>> constraintViolations) {
-    Map<String, List<String>> map = new HashMap<>();
-
-    constraintViolations.forEach(violation -> {
-      for (String attribute : getAttributes(violation)) {
-        putEntry(map, attribute, violation.getMessage());
-      }
-    });
-
-    return map;
-  }
-
-  static void putEntry(Map<String, List<String>> map, String key, String value) {
-    if (!map.containsKey(key)) {
-      map.put(key, new ArrayList<>());
-    }
-    map.get(key).add(value);
-  }
-
-  static String[] getAttributes(ConstraintViolation<?> constraintViolation) {
-    String[] values = (String[]) constraintViolation.getConstraintDescriptor().getAttributes().get("path");
-    if (values == null || values.length == 0) {
-      return getAttributesFromPath(constraintViolation);
-    } else {
-      return values;
-    }
-  }
-
-  static String[] getAttributesFromPath(ConstraintViolation<?> constraintViolation) {
-    Path path = constraintViolation.getPropertyPath();
-
-    StringBuilder builder = new StringBuilder();
-    path.forEach(node -> {
-      if (node.getName() != null) {
-        if (builder.isEmpty()) {
-          builder.append(node.getName());
-        }
-        builder.append(".");
-      }
-    });
-
-    return new String[]{builder.toString()};
-  }
-
-  public Map<String, Map<String, String>> getMetaData(Set<ConstraintViolation<?>> constraintViolations) {
-    Map<String, Map<String, String>> metadata = new HashMap<>();
-    constraintViolations.forEach(violation -> {
-      try {
-        Class<?> beanClass = violation.getLeafBean().getClass();
-
-        String field = "";
-        for (Path.Node node : violation.getPropertyPath()) {
-          field = node.getName();
-        }
-
-        Field declaredField = beanClass.getDeclaredField(field);
-        MetaDatas metaDatas = declaredField.getAnnotation(MetaDatas.class);
-
-        if (metaDatas != null) {
-          Map<String, String> values = new HashMap<>();
-
-          for (MetaData metaData : metaDatas.value()) {
-            values.put(metaData.key(), metaData.value());
-          }
-
-          for (String attribute : getAttributes(violation)) {
-            metadata.put(attribute, values);
-          }
-        }
-
-      } catch (Throwable throwable) {
-        log.warn(throwable.getMessage(), throwable);
-      }
-    });
-
-    return metadata;
   }
 
 }
