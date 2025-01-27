@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,7 @@ public class ValidTokenService {
         return validTokenRepository.findByToken(token).isPresent();
     }
 
+    @Transactional
     public void cleanUpExpiredTokens() {
         validTokenRepository.deleteByExpirationTimeBefore(LocalDateTime.now());
     }
