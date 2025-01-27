@@ -41,12 +41,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
+    private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", "/api/auth/login"};
+
+    private final List<String> noAuthorizedPaths = List.of("/api/auth/current");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String[] publicEndpoint = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", "/api/auth/login"};
-
-        for (String excludedUrl : publicEndpoint) {
+        for (String excludedUrl : publicPaths) {
             if (request.getRequestURI().startsWith(excludedUrl)) {
                 filterChain.doFilter(request, response);
                 return;
@@ -90,6 +92,12 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     boolean isPathAuthorized(UserDetails userDetails, String requestPath, String requestMethod) {
+        boolean isNoAuthorizedPath = noAuthorizedPaths.stream()
+                .anyMatch(noAuthorizedPath -> pathMatcher.match(noAuthorizedPath , requestPath));
+        if(isNoAuthorizedPath) {
+            return true;
+        }
+
         List<UserRole> userRoles = userDetails.getAuthorities().stream()
                 .map(role -> UserRole.valueOf(role.getAuthority()) )
                 .toList();

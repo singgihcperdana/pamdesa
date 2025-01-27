@@ -16,10 +16,4 @@ public interface RoleEndpointRepository extends JpaRepository<RoleEndpoint, Long
             " WHERE r.userRole IN :roles")
     List<PathAndMethod> findPathsByRoleIn(@Param("roles") List<UserRole> roles);
 
-    @Query("SELECT CASE WHEN COUNT(re) > 0 THEN true ELSE false END " +
-            "FROM RoleEndpoint re JOIN re.role r JOIN re.endpoint e " +
-            "WHERE r.userRole IN :roles AND e.path = :path AND re.method = :method")
-    boolean existsByRoleAndPathAndMethod(@Param("roles") List<UserRole> roles,
-                                         @Param("path") String path,
-                                         @Param("method") String method);
 }
