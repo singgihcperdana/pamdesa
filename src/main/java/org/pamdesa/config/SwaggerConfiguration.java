@@ -2,6 +2,7 @@ package org.pamdesa.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class SwaggerConfiguration {
                             .description("token")
                             .example("Bearer xxxxxx")
                             .required(true)
-                            .schema(new io.swagger.v3.oas.models.media.StringSchema()));
+                            .schema(new StringSchema()));
                 });
             }
         });
