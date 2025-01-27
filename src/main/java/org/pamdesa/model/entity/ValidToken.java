@@ -24,4 +24,7 @@ public class ValidToken extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Version
+    private Integer version;
 }

@@ -5,55 +5,26 @@ import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.response.Response;
-import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.model.payload.response.UserInfoResponse;
-import org.pamdesa.repository.UserRepository;
+import org.pamdesa.service.AuthService;
 import org.pamdesa.service.UserService;
-import org.pamdesa.service.ValidTokenService;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-
-    private final JwtHelper jwtHelper;
-
-    private final ValidTokenService tokenService;
-
-    private final UserRepository userRepository;
-
-    private final ValidTokenService validTokenService;
-
     private final UserService userService;
+
+    private final AuthService authService;
 
     @PostMapping(AppPath.LOGIN)
     public Response<String> login(@Validated @RequestBody LoginRequest request) {
         try {
-            Authentication authenticate = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-            UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
-            String token = jwtHelper.generateToken(request.getUsername());
-            LocalDateTime expirationTime = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(jwtHelper.getTokenExpiration(token)), ZoneId.systemDefault());
-            SecurityContextHolder.getContext().setAuthentication(authenticate);
-            userRepository.findByUsername(userDetails.getUsername())
-                    .ifPresent(user -> tokenService.saveToken(token, expirationTime, user));
-
-            return ResponseHelper.ok(token);
+            return ResponseHelper.ok(authService.login(request));
         } catch (BadCredentialsException ex) {
             return ResponseHelper.status(400, "BadCredential");
         }
@@ -66,8 +37,7 @@ public class AuthController {
 
     @PostMapping(AppPath.LOGOUT)
     public Response<String> logout(@RequestHeader("token") String token) {
-        String cleanToken = token.replace("Bearer ", "");
-        validTokenService.deleteByToken(cleanToken);
+        authService.logout(token);
         return ResponseHelper.ok();
     }
 

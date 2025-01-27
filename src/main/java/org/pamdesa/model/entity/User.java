@@ -48,4 +48,6 @@ public class User extends BaseEntity implements Serializable {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ValidToken> validTokens;
 
+  @Version
+  private Integer version;
 }

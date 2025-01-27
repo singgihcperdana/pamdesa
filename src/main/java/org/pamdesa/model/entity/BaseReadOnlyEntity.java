@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 public abstract class BaseReadOnlyEntity {
 
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
 
     @CreatedDate
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
 }

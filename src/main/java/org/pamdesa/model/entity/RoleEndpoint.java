@@ -3,11 +3,12 @@ package org.pamdesa.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
 @Table(name = "role_endpoint")
-public class RoleEndpoint {
+public class RoleEndpoint extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +23,7 @@ public class RoleEndpoint {
     private Endpoint endpoint;
 
     private String method;
+
+    @Version
+    private Integer version;
 }
