@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.pamdesa.model.constant.AppPath.CUSTOMER_ORDER;
-
 @RestController
 @RequiredArgsConstructor
 public class CustomerController {
@@ -23,7 +21,7 @@ public class CustomerController {
         return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
     }
 
-    @GetMapping(CUSTOMER_ORDER)
+    @GetMapping(AppPath.CUSTOMER_ORDER)
     public ResponseEntity<String> getHelloPage(@PathVariable("id") String id) {
         return ResponseEntity.ok("order " + id);
     }
