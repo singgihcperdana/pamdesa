@@ -49,7 +49,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
 
-        if (isPublicPath(requestPath, requestMethod)) {
+        //check public path
+        if (this.isValidPath(requestPath, requestMethod, accessRulesProperties.getPublicPaths())) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -90,8 +91,25 @@ public class JwtFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean isAuthedPath(String requestPath, String requestMethod) {
-        return accessRulesProperties.getAuthedPaths().stream()
+    private boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
+        //check path for non specific role
+        if(this.isValidPath(requestPath, requestMethod, accessRulesProperties.getAuthedPaths())) {
+            return true;
+        }
+
+        Map<String, List<AccessRulesProperties.Path>> accessRules = accessRulesProperties.getRules();
+        List<UserRole> userRoles = userDetails.getAuthorities().stream()
+                .map(role -> UserRole.valueOf(role.getAuthority()) )
+                .toList();
+        return userRoles.stream()
+                .anyMatch(role-> this.isValidPath(requestPath, requestMethod, accessRules.get(role.name())));
+    }
+
+    private boolean isValidPath(String requestPath, String requestMethod, List<AccessRulesProperties. Path> paths) {
+        if(CollectionUtils.isEmpty(paths)) {
+            return false;
+        }
+        return paths.stream()
                 .anyMatch(authedPath -> {
                     if (pathMatcher.match(authedPath.getPath(), requestPath)) {
                         List<String> methods = authedPath.getMethods();
@@ -99,44 +117,6 @@ public class JwtFilter extends OncePerRequestFilter {
                     }
                     return false;
                 });
-    }
-
-    private boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
-        if(isAuthedPath(requestPath, requestMethod)) {
-            return true;
-        }
-
-        Map<String, Map<String, List<String>>> accessRules = accessRulesProperties.getRules();
-        List<UserRole> userRoles = userDetails.getAuthorities().stream()
-                .map(role -> UserRole.valueOf(role.getAuthority()) )
-                .toList();
-        return userRoles.stream()
-                .anyMatch(role-> isPathAndMethodAllowed(role.name(), requestPath, requestMethod, accessRules));
-    }
-
-    private boolean isPathAndMethodAllowed(String role, String path, String method, Map<String, Map<String, List<String>>> accessRules) {
-        Map<String, List<String>> roleRules = accessRules.get(role);
-        if (roleRules == null) {
-            return false;
-        }
-        return roleRules.entrySet()
-                .stream()
-                .anyMatch(entry -> pathMatcher.match(entry.getKey(), path) &&
-                        entry.getValue().contains(method));
-    }
-
-    private boolean isPublicPath(String path, String method) {
-        for (AccessRulesProperties.Path publicPath : accessRulesProperties.getPublicPaths()) {
-            System.out.println("publicPath = " + publicPath);
-            if (pathMatcher.match(publicPath.getPath(), path)) {
-                List<String> methods = publicPath.getMethods();
-                if (CollectionUtils.isEmpty(methods)) {
-                    return true;
-                }
-                return methods.contains("*") || methods.contains(method);
-            }
-        }
-        return false;
     }
 
 }

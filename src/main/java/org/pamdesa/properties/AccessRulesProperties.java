@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 public class AccessRulesProperties {
 
-    private Map<String, Map<String, List<String>>> rules = new HashMap<>();
+    private Map<String, List<Path>> rules = new HashMap<>();
 
     private List<Path> authedPaths = new ArrayList<>();
 
