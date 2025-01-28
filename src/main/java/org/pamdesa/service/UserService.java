@@ -34,9 +34,12 @@ public class UserService implements UserDetailsService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
         return UserInfoResponse.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .id(user.getId())
+                .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
+                .fullName(user.getFullName())
                 .roles(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .build();
     }
