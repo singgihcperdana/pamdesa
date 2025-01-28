@@ -26,10 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtHelper jwtHelper;
 
@@ -58,11 +59,14 @@ public class JwtFilter extends OncePerRequestFilter {
         final String token = request.getHeader("token");
 
         if (token == null || !token.startsWith("Bearer ")) {
-            throw new IOException(ErrorCode.INVALID_TOKEN.name());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonHelper.toJson(ResponseHelper.status(HttpStatus.BAD_REQUEST.value(),
+                    ErrorCode.INVALID_TOKEN.name())));
+            return;
         }
 
-        final String jwt = token.substring(7);
-        final String username = jwtHelper.extractUsername(jwt);
+        String jwt = token.substring(7);
+        String username = jwtHelper.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (!tokenService.isTokenValid(jwt)) {
@@ -112,7 +116,9 @@ public class JwtFilter extends OncePerRequestFilter {
         return paths.stream()
                 .anyMatch(authedPath -> {
                     if (pathMatcher.match(authedPath.getPath(), requestPath)) {
-                        List<String> methods = authedPath.getMethods();
+                        List<String> methods = Optional.ofNullable(authedPath.getMethods())
+                            .filter(data-> !data.isEmpty())
+                            .orElse(List.of("*"));
                         return methods.contains("*") || methods.contains(requestMethod);
                     }
                     return false;
