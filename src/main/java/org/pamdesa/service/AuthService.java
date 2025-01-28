@@ -23,8 +23,6 @@ public class AuthService {
 
     private final JwtHelper jwtHelper;
 
-    private final ValidTokenService tokenService;
-
     private final UserRepository userRepository;
 
     private final ValidTokenService validTokenService;
@@ -39,7 +37,7 @@ public class AuthService {
 
         UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
         userRepository.findByUsername(userDetails.getUsername())
-                .ifPresent(user -> tokenService.saveToken(token, expirationTime, user));
+                .ifPresent(user ->  validTokenService.saveToken(token, expirationTime, user));
         return token;
     }
 
