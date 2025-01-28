@@ -34,12 +34,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(AuthTokenFilter authTokenFilter, AuthEntryPointJwt authEntryPointJwt, HttpSecurity http) throws Exception {
-        String[] excludedUrls = {"/api/public/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/auth/**"};
         http.csrf().disable()
-                .authorizeRequests(auth -> auth
-                        .antMatchers(excludedUrls).permitAll()  // Exclude from authentication filter
-                        .anyRequest().authenticated()
-                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()

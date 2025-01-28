@@ -50,7 +50,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String requestPath = request.getServletPath();
         String requestMethod = request.getMethod();
 
-        //check public path
+        // Skip filter for public paths
         if (this.isValidPath(requestPath, requestMethod, accessRulesProperties.getPublicPaths())) {
             filterChain.doFilter(request, response);
             return;
@@ -96,7 +96,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
-        //check path for non specific role
+        //skip filter for non specific role
         if(this.isValidPath(requestPath, requestMethod, accessRulesProperties.getAuthedPaths())) {
             return true;
         }
