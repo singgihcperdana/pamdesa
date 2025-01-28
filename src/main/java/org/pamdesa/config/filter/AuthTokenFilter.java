@@ -5,12 +5,12 @@ import org.pamdesa.helper.JsonHelper;
 import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.enums.ErrorCode;
-import org.pamdesa.model.enums.UserRole;
 import org.pamdesa.model.properties.AccessRulesProperties;
 import org.pamdesa.service.UserService;
 import org.pamdesa.service.ValidTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -102,11 +102,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         Map<String, List<AccessRulesProperties.Path>> accessRules = accessRulesProperties.getRules();
-        List<UserRole> userRoles = userDetails.getAuthorities().stream()
-                .map(role -> UserRole.valueOf(role.getAuthority()) )
+        List<String> userRoles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
                 .toList();
         return userRoles.stream()
-                .anyMatch(role-> this.isValidPath(requestPath, requestMethod, accessRules.get(role.name())));
+                .anyMatch(role-> this.isValidPath(requestPath, requestMethod, accessRules.get(role)));
     }
 
     private boolean isValidPath(String requestPath, String requestMethod, List<AccessRulesProperties. Path> paths) {

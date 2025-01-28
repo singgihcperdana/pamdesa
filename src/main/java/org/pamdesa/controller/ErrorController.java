@@ -51,7 +51,7 @@ public class ErrorController {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Throwable.class)
   public Response<Object> throwable(Throwable e) {
-    String uuid = UUID.randomUUID().toString();
+    String uuid = "ERR_"+ UUID.randomUUID();
     log.error("errorClass: {}, errorId: {}", e.getClass().getName(), uuid, e);
     Response<Object> response = new Response<>();
     response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
