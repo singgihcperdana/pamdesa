@@ -1,4 +1,4 @@
-package org.pamdesa.model.entity;
+package org.pamdesa.model.entity.base;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

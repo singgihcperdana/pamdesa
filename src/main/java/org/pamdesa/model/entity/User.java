@@ -1,6 +1,7 @@
 package org.pamdesa.model.entity;
 
 import lombok.Data;
+import org.pamdesa.model.entity.base.BaseEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

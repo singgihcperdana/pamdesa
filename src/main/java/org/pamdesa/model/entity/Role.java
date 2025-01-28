@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "roles")
 @Data
-public class Role extends BaseEntity implements Serializable {
+public class Role implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,4 @@ public class Role extends BaseEntity implements Serializable {
   @Column(length = 20)
   private UserRole userRole;
 
-  @Version
-  private Integer version;
 }

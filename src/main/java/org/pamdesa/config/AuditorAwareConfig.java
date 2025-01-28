@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Configuration
 @Slf4j
-public class AuditorAwareImpl implements AuditorAware<String> {
+public class AuditorAwareConfig implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {

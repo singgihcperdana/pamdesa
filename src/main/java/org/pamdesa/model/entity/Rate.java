@@ -18,7 +18,4 @@ public class Rate {
     private String description;
 
     private Double amount;
-
-    @Version
-    private Integer version;
 }

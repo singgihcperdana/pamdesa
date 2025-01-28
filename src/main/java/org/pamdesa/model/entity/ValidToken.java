@@ -1,6 +1,7 @@
 package org.pamdesa.model.entity;
 
 import lombok.Data;
+import org.pamdesa.model.entity.base.BaseReadOnlyEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "valid_token")
 @Data
-public class ValidToken extends BaseEntity implements Serializable {
+public class ValidToken extends BaseReadOnlyEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,4 @@ public class ValidToken extends BaseEntity implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Version
-    private Integer version;
 }
