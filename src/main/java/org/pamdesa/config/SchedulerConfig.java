@@ -1,6 +1,6 @@
 package org.pamdesa.config;
 
-import org.pamdesa.scheduler.TokenCleanupScheduler;
+import org.pamdesa.model.scheduler.TokenCleanupScheduler;
 import org.pamdesa.service.ValidTokenService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

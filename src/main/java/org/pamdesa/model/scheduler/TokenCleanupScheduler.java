@@ -1,4 +1,4 @@
-package org.pamdesa.scheduler;
+package org.pamdesa.model.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

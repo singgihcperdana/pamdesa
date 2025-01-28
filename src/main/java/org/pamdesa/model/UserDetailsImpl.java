@@ -1,4 +1,4 @@
-package org.pamdesa.config.security.auth;
+package org.pamdesa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.pamdesa.model.entity.User;

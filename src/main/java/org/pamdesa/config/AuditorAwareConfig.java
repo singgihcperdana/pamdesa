@@ -1,7 +1,7 @@
 package org.pamdesa.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.pamdesa.config.security.auth.UserDetailsImpl;
+import org.pamdesa.model.UserDetailsImpl;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

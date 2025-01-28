@@ -1,4 +1,4 @@
-package org.pamdesa.properties;
+package org.pamdesa.model.properties;
 
 import lombok.Data;
 import lombok.Getter;

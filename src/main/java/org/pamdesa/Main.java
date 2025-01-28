@@ -1,6 +1,6 @@
 package org.pamdesa;
 
-import org.pamdesa.properties.AccessRulesProperties;
+import org.pamdesa.model.properties.AccessRulesProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,4 +1,4 @@
-package org.pamdesa.config.security.jwt;
+package org.pamdesa.config.filter;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.JsonHelper;
@@ -6,13 +6,13 @@ import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.enums.UserRole;
-import org.pamdesa.properties.AccessRulesProperties;
+import org.pamdesa.model.properties.AccessRulesProperties;
+import org.pamdesa.service.UserService;
 import org.pamdesa.service.ValidTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -36,7 +36,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final ValidTokenService tokenService;
 
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     private final JsonHelper jsonHelper;
 
@@ -77,7 +77,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
 
             if (jwtHelper.validateToken(jwt, username)) {
-                var userDetails = userDetailsService.loadUserByUsername(username);
+                var userDetails = userService.loadUserByUsername(username);
 
                 if(!isAuthorizedPath(userDetails, requestPath, requestMethod)) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
