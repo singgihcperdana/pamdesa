@@ -7,6 +7,7 @@ import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.enums.UserRole;
+import org.pamdesa.properties.AccessRulesProperties;
 import org.pamdesa.repository.RoleEndpointRepository;
 import org.pamdesa.service.ValidTokenService;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -39,22 +40,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JsonHelper jsonHelper;
 
-    private final RoleEndpointRepository roleEndpointRepository;
+//    private final RoleEndpointRepository roleEndpointRepository;
+
+    private final AccessRulesProperties accessRulesProperties;
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", AppPath.LOGIN};
+//    private final String[] publicPaths = new String[]{"/api/public/", "/v3/api-docs", "/swagger-ui/", AppPath.LOGIN};
 
-    private final String[] nonAuthorizedPaths = new String[]{AppPath.CURRENT, AppPath.LOGOUT};
+//    private final String[] nonAuthorizedPaths = new String[]{AppPath.CURRENT, AppPath.LOGOUT};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        for (String excludedUrl : publicPaths) {
-            if (request.getRequestURI().startsWith(excludedUrl)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+        String requestPath = request.getServletPath();
+        String requestMethod = request.getMethod();
+
+        // Check if the path is public
+        if (isPublicPath(requestPath)) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
         final String token = request.getHeader("token");
@@ -77,7 +82,7 @@ public class JwtFilter extends OncePerRequestFilter {
             if (jwtHelper.validateToken(jwt, username)) {
                 var userDetails = userDetailsService.loadUserByUsername(username);
 
-                if(!isAuthorizedPath(userDetails, request.getServletPath(), request.getMethod())) {
+                if(!isAuthorizedPath(userDetails, requestPath, requestMethod)) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(jsonHelper.toJson(ResponseHelper.status(HttpStatus.FORBIDDEN.value(),
                             HttpStatus.FORBIDDEN.name())));
@@ -93,24 +98,34 @@ public class JwtFilter extends OncePerRequestFilter {
         }
     }
 
-    boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
-        boolean isNonAuthorizedPath = Arrays.stream(nonAuthorizedPaths)
+    private boolean isAuthorizedPath(UserDetails userDetails, String requestPath, String requestMethod) {
+        boolean isAuthedPath = accessRulesProperties.getAuthedPaths().stream()
                 .anyMatch(noAuthorizedPath -> pathMatcher.match(noAuthorizedPath, requestPath));
-        if(isNonAuthorizedPath) {
+        if(isAuthedPath) {
             return true;
         }
-
+        Map<String, Map<String, List<String>>> accessRules = accessRulesProperties.getRules();
         List<UserRole> userRoles = userDetails.getAuthorities().stream()
                 .map(role -> UserRole.valueOf(role.getAuthority()) )
                 .toList();
+        return userRoles.stream()
+                .anyMatch(role-> isPathAndMethodAllowed(role.name(), requestPath, requestMethod, accessRules));
+    }
 
-        return roleEndpointRepository.findPathsByRoleIn(userRoles).stream()
-                .anyMatch(allowedPath -> {
-                    if (pathMatcher.match(allowedPath.getPath(), requestPath)) {
-                        return allowedPath.getMethod().equalsIgnoreCase(requestMethod);
-                    }
-                    return false;
-                });
+    private boolean isPathAndMethodAllowed(String role, String path, String method, Map<String, Map<String, List<String>>> accessRules) {
+        Map<String, List<String>> roleRules = accessRules.get(role);
+        if (roleRules != null) {
+            return roleRules.entrySet()
+                    .stream()
+                    .anyMatch(entry -> pathMatcher.match(entry.getKey(), path) &&
+                            entry.getValue().contains(method));
+        }
+        return false;
+    }
+
+    private boolean isPublicPath(String path) {
+        List<String> publicPaths = accessRulesProperties.getPublicPaths();
+        return publicPaths.stream().anyMatch(publicPath -> pathMatcher.match(publicPath, path));
     }
 
 }
