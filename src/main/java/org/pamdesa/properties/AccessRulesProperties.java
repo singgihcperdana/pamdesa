@@ -1,6 +1,8 @@
 package org.pamdesa.properties;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
@@ -14,8 +16,17 @@ public class AccessRulesProperties {
 
     private Map<String, Map<String, List<String>>> rules = new HashMap<>();
 
-    private List<String> publicPaths = new ArrayList<>();
+    private List<Path> authedPaths = new ArrayList<>();
 
-    private List<String> authedPaths = new ArrayList<>();
+    private List<Path> publicPaths = new ArrayList<>();
 
+    @Getter
+    @Setter
+    public static class Path {
+
+        private String path;
+
+        private List<String> methods;
+
+    }
 }
