@@ -15,7 +15,8 @@ import java.util.Set;
 @Table(name = "users",
        uniqueConstraints = {
            @UniqueConstraint(columnNames = "username"),
-           @UniqueConstraint(columnNames = "email")
+           @UniqueConstraint(columnNames = "email"),
+           @UniqueConstraint(columnNames = "phone_number")
        })
 @Data
 public class User extends BaseEntity implements Serializable {
@@ -32,6 +33,19 @@ public class User extends BaseEntity implements Serializable {
   @Size(max = 50)
   @Email
   private String email;
+
+  @NotBlank
+  @Size(max = 50)
+  @Column(name = "full_name")
+  private String fullName;
+
+  @NotBlank
+  @Size(max = 15)
+  @Column(name = "phone_number")
+  private String phoneNumber;
+
+  @Size(max = 255)
+  private String address;
 
   @NotBlank
   @Size(max = 120)

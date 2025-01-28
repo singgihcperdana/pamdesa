@@ -2,8 +2,8 @@ package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pamdesa.model.exception.ClientException;
-import org.pamdesa.model.exception.JwtAuthenticationException;
+import org.pamdesa.model.ClientException;
+import org.pamdesa.model.JwtAuthenticationException;
 import org.pamdesa.model.payload.response.Response;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;

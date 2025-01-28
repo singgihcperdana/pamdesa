@@ -8,6 +8,7 @@ import lombok.Data;
 public class PathAndMethod {
 
     private String path;
+
     private String method;
 
 }

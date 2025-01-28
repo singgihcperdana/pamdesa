@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.pamdesa.model.entity.User;
 import org.pamdesa.model.payload.response.UserInfoResponse;
 import org.pamdesa.repository.UserRepository;
-import org.pamdesa.config.security.services.UserDetailsImpl;
+import org.pamdesa.config.security.auth.UserDetailsImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
