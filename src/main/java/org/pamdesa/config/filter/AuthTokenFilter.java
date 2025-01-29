@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -100,13 +99,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if(this.isValidPath(requestPath, requestMethod, accessRulesProperties.getAuthedPaths())) {
             return true;
         }
-
-        Map<String, List<AccessRulesProperties.Path>> accessRules = accessRulesProperties.getRules();
-        List<String> userRoles = userDetails.getAuthorities().stream()
+        return userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .toList();
-        return userRoles.stream()
-                .anyMatch(role-> this.isValidPath(requestPath, requestMethod, accessRules.get(role)));
+                .anyMatch(role-> this.isValidPath(requestPath, requestMethod, accessRulesProperties.getRules().get(role)));
     }
 
     private boolean isValidPath(String requestPath, String requestMethod, List<AccessRulesProperties. Path> paths) {
