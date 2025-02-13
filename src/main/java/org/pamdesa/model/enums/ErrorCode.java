@@ -1,5 +1,6 @@
 package org.pamdesa.model.enums;
 
 public enum ErrorCode {
-    INVALID_TOKEN
+    INVALID_TOKEN,
+    BAD_CREDENTIAL
 }

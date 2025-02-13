@@ -1,4 +1,4 @@
-package org.pamdesa.model;
+package org.pamdesa.model.error;
 
 public class JwtAuthenticationException extends RuntimeException {
     public JwtAuthenticationException(String message) {

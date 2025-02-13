@@ -3,6 +3,7 @@ package org.pamdesa.controller;
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.constant.AppPath;
+import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.response.Response;
 import org.pamdesa.model.payload.response.UserInfoResponse;
@@ -26,7 +27,7 @@ public class AuthController {
         try {
             return ResponseHelper.ok(authService.login(request));
         } catch (BadCredentialsException ex) {
-            return ResponseHelper.status(400, "BadCredential");
+            throw new BadCredentialsException(ErrorCode.BAD_CREDENTIAL.name());
         }
     }
 

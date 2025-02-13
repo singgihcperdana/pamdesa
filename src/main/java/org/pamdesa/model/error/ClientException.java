@@ -1,4 +1,4 @@
-package org.pamdesa.model;
+package org.pamdesa.model.error;
 
 import org.pamdesa.model.enums.ErrorCode;
 
