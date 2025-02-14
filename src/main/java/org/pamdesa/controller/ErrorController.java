@@ -51,7 +51,7 @@ public class ErrorController {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Throwable.class)
   public Response<Object> throwable(Throwable e) {
-    String uuid = "ERR_"+ UUID.randomUUID();
+    String uuid = "ERR_" + UUID.randomUUID();
     log.error("errorClass: {}, errorId: {}", e.getClass().getName(), uuid, e);
     Response<Object> response = new Response<>();
     response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -67,7 +67,8 @@ public class ErrorController {
 
     Map<String, List<String>> errors = new HashMap<>();
     if (e.getMethodParameter() != null) {
-      errors.put(e.getMethodParameter().getParameterName(), Collections.singletonList(e.getReason()));
+      errors.put(e.getMethodParameter().getParameterName(),
+          Collections.singletonList(e.getReason()));
     }
 
     Response<Object> response = new Response<>();
@@ -97,7 +98,8 @@ public class ErrorController {
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Response<Object>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+  public ResponseEntity<Response<Object>> methodArgumentNotValidException(
+      MethodArgumentNotValidException e) {
     log.warn(MethodArgumentNotValidException.class.getName(), e);
     Response<Object> response = new Response<>();
     response.setCode(HttpStatus.BAD_REQUEST.value());
@@ -143,7 +145,8 @@ public class ErrorController {
 
   @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
   @ExceptionHandler(UnsupportedMediaTypeStatusException.class)
-  public Response<Object> unsupportedMediaTypeStatusException(UnsupportedMediaTypeStatusException e) {
+  public Response<Object> unsupportedMediaTypeStatusException(
+      UnsupportedMediaTypeStatusException e) {
     log.warn(UnsupportedMediaTypeStatusException.class.getName(), e);
     Response<Object> response = new Response<>();
     response.setCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value());
@@ -185,7 +188,8 @@ public class ErrorController {
     return from(result, messageSource, Locale.getDefault());
   }
 
-  static Map<String, List<String>> from(BindingResult result, MessageSource messageSource, Locale locale) {
+  static Map<String, List<String>> from(BindingResult result, MessageSource messageSource,
+      Locale locale) {
     if (result.hasFieldErrors()) {
       Map<String, List<String>> map = new HashMap<>();
 
@@ -196,7 +200,9 @@ public class ErrorController {
           map.put(field, new ArrayList<>());
         }
 
-        String errorMessage = messageSource.getMessage(fieldError.getCode(), fieldError.getArguments(), fieldError.getDefaultMessage(), locale);
+        String errorMessage =
+            messageSource.getMessage(fieldError.getCode(), fieldError.getArguments(),
+                fieldError.getDefaultMessage(), locale);
         map.get(field).add(errorMessage);
       }
 

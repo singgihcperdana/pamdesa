@@ -14,19 +14,20 @@ import java.util.Map;
 @Data
 public class AccessRulesProperties {
 
-    private Map<String, List<Path>> rules = new HashMap<>();
+  private Map<String, List<Path>> rules = new HashMap<>();
 
-    private List<Path> authedPaths = new ArrayList<>();
+  private List<Path> authedPaths = new ArrayList<>();
 
-    private List<Path> publicPaths = new ArrayList<>();
+  private List<Path> publicPaths = new ArrayList<>();
 
-    @Getter
-    @Setter
-    public static class Path {
 
-        private String path;
+  @Getter
+  @Setter
+  public static class Path {
 
-        private List<String> methods;
+    private String path;
 
-    }
+    private List<String> methods;
+
+  }
 }

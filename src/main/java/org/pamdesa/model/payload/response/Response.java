@@ -17,43 +17,37 @@ import java.util.Map;
 /**
  * Standard Blibli Web Response
  */
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Response<T> {
 
   /**
    * Code , usually same as HTTP Code
    */
-  @JsonProperty("code")
-  private Integer code;
+  @JsonProperty("code") private Integer code;
 
   /**
    * Status, usually same as HTTP status
    */
-  @JsonProperty("status")
-  private String status;
+  @JsonProperty("status") private String status;
 
   /**
    * Response data
    */
-  @JsonProperty("data")
-  private T data;
+  @JsonProperty("data") private T data;
 
   /**
    * Paging information, if response is paginate data
    */
-  @JsonProperty("paging")
-  private Paging paging;
+  @JsonProperty("paging") private Paging paging;
 
   /**
    * Error information, if request is not valid
    */
-  @JsonProperty("errors")
-  private Map<String, List<String>> errors;
+  @JsonProperty("errors") private Map<String, List<String>> errors;
 
   /**
    * Metadata information
    */
-  @JsonProperty("metadata")
-  private Map<String, Object> metadata;
+  @JsonProperty("metadata") private Map<String, Object> metadata;
 
 }

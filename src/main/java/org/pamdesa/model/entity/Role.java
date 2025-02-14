@@ -10,11 +10,8 @@ import java.io.Serializable;
 @Data
 public class Role implements Serializable {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Integer id;
 
-  @Column(length = 20)
-  private String name;
+  @Column(length = 20) private String name;
 
 }

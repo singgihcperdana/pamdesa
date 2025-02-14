@@ -23,36 +23,33 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                .and()
-                .build();
-    }
+  @Bean
+  public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder,
+      UserDetailsService userDetailsService) throws Exception {
+    return http.getSharedObject(AuthenticationManagerBuilder.class)
+        .userDetailsService(userDetailsService).passwordEncoder(passwordEncoder).and().build();
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(ObjectMapper objectMapper, AuthTokenFilter authTokenFilter, HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    objectMapper.writeValue(response.getOutputStream(), Response.builder()
-                            .status(HttpStatus.UNAUTHORIZED.name())
-                            .code(HttpStatus.UNAUTHORIZED.value())
-                            .build());
-                });
-        return http.build();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(ObjectMapper objectMapper,
+      AuthTokenFilter authTokenFilter, HttpSecurity http) throws Exception {
+    http.csrf().disable().sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
+          response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          objectMapper.writeValue(response.getOutputStream(),
+              Response.builder().status(HttpStatus.UNAUTHORIZED.name())
+                  .code(HttpStatus.UNAUTHORIZED.value()).build());
+        });
+    return http.build();
+  }
 
 }
 

@@ -14,12 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class PagingRequest {
 
-  @JsonProperty("page")
-  private Long page;
+  @JsonProperty("page") private Long page;
 
-  @JsonProperty("item_per_page")
-  private Long itemPerPage;
+  @JsonProperty("item_per_page") private Long itemPerPage;
 
-  @JsonProperty("sort_by")
-  private List<SortBy> sortBy;
+  @JsonProperty("sort_by") private List<SortBy> sortBy;
 }

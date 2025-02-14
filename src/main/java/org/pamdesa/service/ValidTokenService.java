@@ -13,27 +13,27 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ValidTokenService {
 
-    private final ValidTokenRepository validTokenRepository;
+  private final ValidTokenRepository validTokenRepository;
 
-    public void saveToken(String token, LocalDateTime expirationTime, User user) {
-        ValidToken validToken = new ValidToken();
-        validToken.setToken(token);
-        validToken.setExpirationTime(expirationTime);
-        validToken.setUser(user);
-        validTokenRepository.save(validToken);
-    }
+  public void saveToken(String token, LocalDateTime expirationTime, User user) {
+    ValidToken validToken = new ValidToken();
+    validToken.setToken(token);
+    validToken.setExpirationTime(expirationTime);
+    validToken.setUser(user);
+    validTokenRepository.save(validToken);
+  }
 
-    public boolean isTokenValid(String token) {
-        return validTokenRepository.findByToken(token).isPresent();
-    }
+  public boolean isTokenValid(String token) {
+    return validTokenRepository.findByToken(token).isPresent();
+  }
 
-    @Transactional
-    public void cleanUpExpiredTokens() {
-        validTokenRepository.deleteByExpirationTimeBefore(LocalDateTime.now());
-    }
+  @Transactional
+  public void cleanUpExpiredTokens() {
+    validTokenRepository.deleteByExpirationTimeBefore(LocalDateTime.now());
+  }
 
-    @Transactional
-    public void deleteByToken(String token){
-        validTokenRepository.deleteByToken(token);
-    }
+  @Transactional
+  public void deleteByToken(String token) {
+    validTokenRepository.deleteByToken(token);
+  }
 }

@@ -10,21 +10,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JsonHelper {
 
-    private final ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
-    @SneakyThrows
-    public <T> T fromJson(String json, Class<T> tClass) {
-        return objectMapper.readValue(json, tClass);
-    }
+  @SneakyThrows
+  public <T> T fromJson(String json, Class<T> tClass) {
+    return objectMapper.readValue(json, tClass);
+  }
 
-    @SneakyThrows
-    public <T> T fromJson(String json, TypeReference<T> tTypeReference) {
-        return objectMapper.readValue(json, tTypeReference);
-    }
+  @SneakyThrows
+  public <T> T fromJson(String json, TypeReference<T> tTypeReference) {
+    return objectMapper.readValue(json, tTypeReference);
+  }
 
-    @SneakyThrows
-    public <T> String toJson(T object) {
-        return objectMapper.writeValueAsString(object);
-    }
+  @SneakyThrows
+  public <T> String toJson(T object) {
+    return objectMapper.writeValueAsString(object);
+  }
 
 }

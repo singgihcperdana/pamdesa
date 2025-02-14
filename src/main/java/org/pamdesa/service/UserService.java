@@ -19,29 +19,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+  @Override
+  @Transactional
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByUsername(username).orElseThrow(
+        () -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(user);
-    }
+    return UserDetailsImpl.build(user);
+  }
 
-    public UserInfoResponse getCurrent() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
-        return UserInfoResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
-                .address(user.getAddress())
-                .fullName(user.getFullName())
-                .roles(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .build();
-    }
+  public UserInfoResponse getCurrent() {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
+    return UserInfoResponse.builder().id(user.getId()).username(user.getUsername())
+        .email(user.getEmail()).phoneNumber(user.getPhoneNumber()).address(user.getAddress())
+        .fullName(user.getFullName()).roles(
+            userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList())).build();
+  }
 
 }

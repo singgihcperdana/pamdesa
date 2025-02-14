@@ -13,12 +13,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseReadOnlyEntity {
 
-    @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
+  @CreatedBy @Column(name = "created_by", updatable = false) private String createdBy;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreatedDate @Column(name = "created_at", updatable = false) private LocalDateTime createdAt;
 
 }

@@ -10,9 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ValidTokenRepository extends JpaRepository<ValidToken, Long> {
 
-    Optional<ValidToken> findByToken(String token);
+  Optional<ValidToken> findByToken(String token);
 
-    void deleteByExpirationTimeBefore(java.time.LocalDateTime now);
+  void deleteByExpirationTimeBefore(java.time.LocalDateTime now);
 
-    void deleteByToken(String token);
+  void deleteByToken(String token);
 }

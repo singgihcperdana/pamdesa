@@ -12,9 +12,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ConditionalOnProperty(value = "app.scheduler.cleanUpExpiredTokens", havingValue = "true")
 public class SchedulerConfig {
 
-    @Bean
-    public TokenCleanupScheduler tokenCleanupScheduler(ValidTokenService validTokenService) {
-        return new TokenCleanupScheduler(validTokenService);
-    }
+  @Bean
+  public TokenCleanupScheduler tokenCleanupScheduler(ValidTokenService validTokenService) {
+    return new TokenCleanupScheduler(validTokenService);
+  }
 
 }

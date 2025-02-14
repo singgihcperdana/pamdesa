@@ -12,14 +12,15 @@ import java.util.Optional;
 @Slf4j
 public class AuditorAwareConfig implements AuditorAware<String> {
 
-    @Override
-    public Optional<String> getCurrentAuditor() {
-        try {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return Optional.of(userDetails.getUsername());
-        } catch (Exception e) {
-            log.warn("getCurrentAuditor failed, fallback to SYSTEM: {}", e.getMessage());
-            return Optional.of("SYSTEM");
-        }
+  @Override
+  public Optional<String> getCurrentAuditor() {
+    try {
+      UserDetailsImpl userDetails =
+          (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      return Optional.of(userDetails.getUsername());
+    } catch (Exception e) {
+      log.warn("getCurrentAuditor failed, fallback to SYSTEM: {}", e.getMessage());
+      return Optional.of("SYSTEM");
     }
+  }
 }

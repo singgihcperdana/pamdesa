@@ -10,12 +10,9 @@ import javax.validation.constraints.Size;
 @Table(name = "rate")
 public class Rate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
 
-    @Size(min=3, max=255)
-    private String description;
+  @Size(min = 3, max = 255) private String description;
 
-    private Double amount;
+  private Double amount;
 }

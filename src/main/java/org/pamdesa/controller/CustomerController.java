@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @GetMapping(AppPath.CUSTOMER_HELLO)
-    public ResponseEntity<String> getHelloPage() {
-        UserInfoResponse current = userService.getCurrent();
-        return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
-    }
+  @GetMapping(AppPath.CUSTOMER_HELLO)
+  public ResponseEntity<String> getHelloPage() {
+    UserInfoResponse current = userService.getCurrent();
+    return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
+  }
 
-    @PostMapping(AppPath.CUSTOMER_HELLO)
-    public ResponseEntity<String> postHelloPage() {
-        UserInfoResponse current = userService.getCurrent();
-        return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
-    }
+  @PostMapping(AppPath.CUSTOMER_HELLO)
+  public ResponseEntity<String> postHelloPage() {
+    UserInfoResponse current = userService.getCurrent();
+    return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
+  }
 
-    @GetMapping(AppPath.CUSTOMER_ORDER)
-    public ResponseEntity<String> getHelloPage(@PathVariable("id") String id) {
-        return ResponseEntity.ok("order " + id);
-    }
+  @GetMapping(AppPath.CUSTOMER_ORDER)
+  public ResponseEntity<String> getHelloPage(@PathVariable("id") String id) {
+    return ResponseEntity.ok("order " + id);
+  }
 
 }

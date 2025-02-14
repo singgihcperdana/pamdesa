@@ -19,31 +19,32 @@ import java.time.ZoneId;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-    private final JwtHelper jwtHelper;
+  private final JwtHelper jwtHelper;
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    private final ValidTokenService validTokenService;
+  private final ValidTokenService validTokenService;
 
-    public String login(LoginRequest request) {
-        Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        String token = jwtHelper.generateToken(request.getUsername());
-        LocalDateTime expirationTime = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(jwtHelper.getTokenExpiration(token)), ZoneId.systemDefault());
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
+  public String login(LoginRequest request) {
+    Authentication authenticate = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    String token = jwtHelper.generateToken(request.getUsername());
+    LocalDateTime expirationTime =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(jwtHelper.getTokenExpiration(token)),
+            ZoneId.systemDefault());
+    SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
-        userRepository.findByUsername(userDetails.getUsername())
-                .ifPresent(user ->  validTokenService.saveToken(token, expirationTime, user));
-        return token;
-    }
+    UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
+    userRepository.findByUsername(userDetails.getUsername())
+        .ifPresent(user -> validTokenService.saveToken(token, expirationTime, user));
+    return token;
+  }
 
-    public void logout(String token) {
-        String cleanToken = token.replace("Bearer ", "");
-        validTokenService.deleteByToken(cleanToken);
-    }
+  public void logout(String token) {
+    String cleanToken = token.replace("Bearer ", "");
+    validTokenService.deleteByToken(cleanToken);
+  }
 
 }

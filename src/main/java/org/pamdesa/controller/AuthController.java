@@ -18,28 +18,28 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class AuthController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @PostMapping(AppPath.LOGIN)
-    public Response<String> login(@Validated @RequestBody LoginRequest request) {
-        try {
-            return ResponseHelper.ok(authService.login(request));
-        } catch (BadCredentialsException ex) {
-            throw new BadCredentialsException(ErrorCode.BAD_CREDENTIAL.name());
-        }
+  @PostMapping(AppPath.LOGIN)
+  public Response<String> login(@Validated @RequestBody LoginRequest request) {
+    try {
+      return ResponseHelper.ok(authService.login(request));
+    } catch (BadCredentialsException ex) {
+      throw new BadCredentialsException(ErrorCode.BAD_CREDENTIAL.name());
     }
+  }
 
-    @GetMapping(AppPath.CURRENT)
-    public Response<UserInfoResponse> current() {
-        return ResponseHelper.ok(userService.getCurrent());
-    }
+  @GetMapping(AppPath.CURRENT)
+  public Response<UserInfoResponse> current() {
+    return ResponseHelper.ok(userService.getCurrent());
+  }
 
-    @PostMapping(AppPath.LOGOUT)
-    public Response<String> logout(@RequestHeader("token") String token) {
-        authService.logout(token);
-        return ResponseHelper.ok();
-    }
+  @PostMapping(AppPath.LOGOUT)
+  public Response<String> logout(@RequestHeader("token") String token) {
+    authService.logout(token);
+    return ResponseHelper.ok();
+  }
 
 }

@@ -10,12 +10,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public abstract class BaseEntity extends BaseReadOnlyEntity {
 
-    @LastModifiedBy
-    @Column(name = "updated_by")
-    private String updatedBy;
+  @LastModifiedBy @Column(name = "updated_by") private String updatedBy;
 
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @LastModifiedDate @Column(name = "updated_at") private LocalDateTime updatedAt;
 
 }

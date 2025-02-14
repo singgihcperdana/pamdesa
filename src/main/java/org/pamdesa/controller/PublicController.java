@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/public")
 public class PublicController {
 
-    @GetMapping("/no-auth")
-    public Response<String> getNoAuthPage() {
-        return ResponseHelper.ok("Welcome to the not authenticated page!");
-    }
+  @GetMapping("/no-auth")
+  public Response<String> getNoAuthPage() {
+    return ResponseHelper.ok("Welcome to the not authenticated page!");
+  }
 
 }

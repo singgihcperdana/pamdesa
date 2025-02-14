@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class InternalController {
 
-    @GetMapping(AppPath.ADMIN_HELLO)
-    public Response<String> getHelloPage() {
-        return ResponseHelper.ok("Welcome internal!");
-    }
+  @GetMapping(AppPath.ADMIN_HELLO)
+  public Response<String> getHelloPage() {
+    return ResponseHelper.ok("Welcome internal!");
+  }
 
 }

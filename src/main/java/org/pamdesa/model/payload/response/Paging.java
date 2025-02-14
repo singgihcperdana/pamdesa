@@ -15,19 +15,14 @@ import java.util.List;
 @Builder
 public class Paging {
 
-  @JsonProperty("page")
-  private Long page;
+  @JsonProperty("page") private Long page;
 
-  @JsonProperty("total_page")
-  private Long totalPage;
+  @JsonProperty("total_page") private Long totalPage;
 
-  @JsonProperty("item_per_page")
-  private Long itemPerPage;
+  @JsonProperty("item_per_page") private Long itemPerPage;
 
-  @JsonProperty("total_item")
-  private Long totalItem;
+  @JsonProperty("total_item") private Long totalItem;
 
-  @JsonProperty("sort_by")
-  private List<SortBy> sortBy;
+  @JsonProperty("sort_by") private List<SortBy> sortBy;
 
 }

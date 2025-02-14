@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SortBy {
 
-  @JsonProperty("property_name")
-  private String propertyName;
+  @JsonProperty("property_name") private String propertyName;
 
-  @JsonProperty("direction")
-  private SortByDirection direction;
+  @JsonProperty("direction") private SortByDirection direction;
 }
