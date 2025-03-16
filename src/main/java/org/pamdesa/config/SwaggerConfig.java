@@ -1,6 +1,8 @@
 package org.pamdesa.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
@@ -22,6 +24,18 @@ public class SwaggerConfig {
                 .required(true).schema(new StringSchema())));
       }
     });
+  }
+
+  @Bean
+  public OpenApiCustomiser filterVersionEndpoint() {
+    return openApi -> {
+      Paths paths = openApi.getPaths();
+      if (paths.containsKey("/version")) {
+        PathItem pathItem = paths.get("/version");
+        PathItem filteredPathItem = new PathItem().get(pathItem.getGet()); //GET only
+        paths.addPathItem("/version", filteredPathItem);
+      }
+    };
   }
 
   @Bean
