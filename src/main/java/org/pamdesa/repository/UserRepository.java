@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
 
   @Transactional
   @Query("SELECT u FROM User u "
@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
+
+  Optional<User> findByIdAndOrganization_Id(String id, String organizationId);
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ValidTokenRepository extends JpaRepository<ValidToken, Long> {
+public interface ValidTokenRepository extends JpaRepository<ValidToken, String> {
 
   Optional<ValidToken> findByToken(String token);
 

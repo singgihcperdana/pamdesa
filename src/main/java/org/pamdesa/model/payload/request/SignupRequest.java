@@ -8,34 +8,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class SignupRequest {
+public class SignupRequest extends CreateCustomerRequest {
 
   @NotBlank
   @Size(min = 3, max = 20)
   private String username;
 
-  @NotBlank
-  @Size(min = 3, max = 20)
-  private String meterId;
-
-  @NotBlank
-  @Size(min = 3, max = 20)
-  private String rateId;
-
-  @NotBlank
   @Size(max = 50)
   @Email
   private String email;
 
-  @NotBlank
-  @Size(max = 50)
-  private String fullName;
-
-  @NotBlank
-  @Size(max = 50)
-  private String address;
-
-  @NotBlank
   @Size(max = 15)
   private String phoneNumber;
 

@@ -1,6 +1,7 @@
 package org.pamdesa.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pamdesa.model.entity.Organization;
 import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.error.ClientException;
@@ -11,11 +12,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrganizationService {
 
   private final OrganizationRepository organizationRepository;
 
   public Organization save(CreateOrganizationRequest request) {
+    if (organizationRepository.existsByName(request.getName())) {
+      log.info("organization with name {} already exists", request.getName());
+      throw new ClientException(ErrorCode.DATA_ALREADY_EXIST);
+    }
     return organizationRepository.save(Organization.builder()
             .address(request.getAddress())
             .description(request.getDescription())
