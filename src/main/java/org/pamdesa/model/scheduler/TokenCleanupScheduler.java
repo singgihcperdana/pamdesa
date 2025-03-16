@@ -11,7 +11,6 @@ public class TokenCleanupScheduler {
 
   private final ValidTokenService validTokenService;
 
-  //    @Scheduled(fixedRate = 3600000) // Runs every hour
   @Scheduled(fixedRate = 60000) // Runs every minute
   public void cleanUpExpiredTokens() {
     log.info("cleanUpExpiredTokens");

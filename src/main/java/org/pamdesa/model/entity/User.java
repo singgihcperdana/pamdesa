@@ -1,6 +1,10 @@
 package org.pamdesa.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.pamdesa.model.entity.base.BaseEntity;
 
 import javax.persistence.*;
@@ -16,9 +20,15 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email"), @UniqueConstraint(columnNames = "phone_number")})
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity implements Serializable {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+  @Id
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+  private String id;
 
   @NotBlank @Size(max = 20) private String username;
 
@@ -41,5 +51,4 @@ public class User extends BaseEntity implements Serializable {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ValidToken> validTokens;
 
-  @Version private Integer version;
 }

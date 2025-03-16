@@ -51,7 +51,8 @@ public class ErrorController {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @ExceptionHandler(Throwable.class)
   public Response<Object> throwable(Throwable e) {
-    String uuid = "ERR_" + UUID.randomUUID();
+    String uuid = "ERR_" + UUID.randomUUID().toString().replaceAll("-", "")
+        .toUpperCase(Locale.ROOT);
     log.error("errorClass: {}, errorId: {}", e.getClass().getName(), uuid, e);
     Response<Object> response = new Response<>();
     response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -184,11 +185,11 @@ public class ErrorController {
     return response;
   }
 
-  static Map<String, List<String>> from(BindingResult result, MessageSource messageSource) {
+  private static Map<String, List<String>> from(BindingResult result, MessageSource messageSource) {
     return from(result, messageSource, Locale.getDefault());
   }
 
-  static Map<String, List<String>> from(BindingResult result, MessageSource messageSource,
+  private static Map<String, List<String>> from(BindingResult result, MessageSource messageSource,
       Locale locale) {
     if (result.hasFieldErrors()) {
       Map<String, List<String>> map = new HashMap<>();

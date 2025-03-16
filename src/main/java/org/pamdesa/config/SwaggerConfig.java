@@ -17,11 +17,9 @@ public class SwaggerConfig {
     return openApi -> openApi.getPaths().forEach((path, pathItem) -> {
       if (path.startsWith("/api/internal/") || path.startsWith("/api/customer/") || path.startsWith(
           "/api/secure/") || path.equals(AppPath.CURRENT)) {
-        pathItem.readOperations().forEach(operation -> {
-          operation.addParametersItem(
-              new HeaderParameter().name("token").description("token").example("Bearer xxxxxx")
-                  .required(true).schema(new StringSchema()));
-        });
+        pathItem.readOperations().forEach(operation -> operation.addParametersItem(
+            new HeaderParameter().name("token").description("token").example("Bearer xxxxxx")
+                .required(true).schema(new StringSchema())));
       }
     });
   }

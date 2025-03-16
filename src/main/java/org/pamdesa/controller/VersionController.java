@@ -1,6 +1,7 @@
 package org.pamdesa.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.properties.VersionProperties;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.MediaType;
@@ -16,17 +17,14 @@ public class VersionController implements InitializingBean {
   private String maven;
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     maven = "maven.groupId=" + properties.getGroupId() + "\n" +
       "maven.artifactId=" + properties.getArtifactId() + "\n" +
       "maven.pom.version=" + properties.getVersion() + "\n" +
       "maven.build.time=" + properties.getBuildTime() + "\n";
   }
 
-  @RequestMapping(
-    value = "/version",
-    produces = MediaType.TEXT_PLAIN_VALUE
-  )
+  @RequestMapping(value = AppPath.VERSION, produces = MediaType.TEXT_PLAIN_VALUE)
   public String version() {
     return maven;
   }
