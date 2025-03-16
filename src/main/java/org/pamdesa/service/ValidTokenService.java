@@ -23,7 +23,7 @@ public class ValidTokenService {
     validTokenRepository.save(validToken);
   }
 
-  public boolean isTokenValid(String token) {
+  public boolean isTokenExistInDB(String token) {
     return validTokenRepository.findByToken(token).isPresent();
   }
 

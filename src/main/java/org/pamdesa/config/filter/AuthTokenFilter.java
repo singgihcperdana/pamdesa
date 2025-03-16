@@ -60,16 +60,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     final String token = request.getHeader("token");
 
     if (token == null || !token.startsWith("Bearer ")) {
+      log.warn("token is null or not startsWith 'Bearer '");
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       response.getWriter().write(jsonHelper.toJson(
           ResponseHelper.status(HttpStatus.BAD_REQUEST.value(), ErrorCode.INVALID_TOKEN.name())));
       return;
     }
 
-    String jwt = token.substring(7);
+    String jwt;
     String username;
 
     try {
+      jwt = token.substring(7);
       username = jwtHelper.extractUsername(jwt);
     } catch (Exception e) {
       log.warn("error extractUsername from jwt: {}", e.getMessage());
@@ -80,7 +82,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      if (!tokenService.isTokenValid(jwt)) {
+      if (!tokenService.isTokenExistInDB(jwt)) {
+        log.warn("token not exist in DB");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(jsonHelper.toJson(
             ResponseHelper.status(HttpStatus.UNAUTHORIZED.value(),
@@ -114,8 +117,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     if (this.isValidPath(requestPath, requestMethod, accessRulesProperties.getAuthedPaths())) {
       return true;
     }
-    return userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(
-        role -> this.isValidPath(requestPath, requestMethod,
+    return userDetails.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch(role -> this.isValidPath(requestPath, requestMethod,
             accessRulesProperties.getRules().get(role)));
   }
 
@@ -126,9 +130,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
     return paths.stream().anyMatch(authedPath -> {
       if (pathMatcher.match(authedPath.getPath(), requestPath)) {
-        List<String> methods =
-            Optional.ofNullable(authedPath.getMethods()).filter(data -> !data.isEmpty())
-                .orElse(List.of("*"));
+        List<String> methods = Optional.ofNullable(authedPath.getMethods())
+            .filter(data -> !data.isEmpty())
+            .orElse(List.of("*"));
         return methods.contains("*") || methods.contains(requestMethod);
       }
       return false;
