@@ -1,6 +1,7 @@
 package org.pamdesa.config.filter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pamdesa.helper.JsonHelper;
 import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.helper.ResponseHelper;
@@ -29,6 +30,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
   private final JwtHelper jwtHelper;
@@ -65,7 +67,17 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     String jwt = token.substring(7);
-    String username = jwtHelper.extractUsername(jwt);
+    String username;
+
+    try {
+      username = jwtHelper.extractUsername(jwt);
+    } catch (Exception e) {
+      log.warn("error extractUsername from jwt: {}", e.getMessage());
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.getWriter().write(jsonHelper.toJson(
+          ResponseHelper.status(HttpStatus.BAD_REQUEST.value(), ErrorCode.INVALID_TOKEN.name())));
+      return;
+    }
 
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       if (!tokenService.isTokenValid(jwt)) {

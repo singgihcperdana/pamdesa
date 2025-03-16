@@ -9,16 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+
   private static final long serialVersionUID = 1L;
 
   private final String id;
 
   private final String username;
-
-  private final String email;
 
   private static boolean active = false;
 
@@ -26,22 +24,19 @@ public class UserDetailsImpl implements UserDetails {
 
   private final Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(String id, String username, String email, String password,
+  public UserDetailsImpl(String id, String username, String password,
       Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.username = username;
-    this.email = email;
     this.password = password;
     this.authorities = authorities;
   }
 
   public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities =
-        user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
-            .collect(Collectors.toList());
     active = user.isActive();
-    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(),
-        user.getPassword(), authorities);
+    List<GrantedAuthority> authorities =
+        List.of(new SimpleGrantedAuthority(user.getUserRole().name()));
+    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
   }
 
   @Override

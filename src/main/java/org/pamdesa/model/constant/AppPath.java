@@ -10,5 +10,6 @@ public class AppPath {
   public static final String SIGNUP = "/api/signup";
   public static final String CURRENT = "/api/auth/current";
   public static final String VERSION = "/version";
+  public static final String ORGANIZATION = "/api/internal/organization";
 
 }

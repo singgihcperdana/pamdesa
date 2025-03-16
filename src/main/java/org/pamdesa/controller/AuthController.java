@@ -3,7 +3,6 @@ package org.pamdesa.controller;
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.constant.AppPath;
-import org.pamdesa.model.entity.User;
 import org.pamdesa.model.enums.ErrorCode;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.request.SignupRequest;

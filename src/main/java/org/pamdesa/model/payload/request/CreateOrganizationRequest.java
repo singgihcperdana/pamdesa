@@ -1,17 +1,21 @@
 package org.pamdesa.model.payload.request;
 
-
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class LoginRequest {
+public class CreateOrganizationRequest {
 
   @NotBlank(message = "NotBlank")
-  private String username;
+  private String name;
 
   @NotBlank(message = "NotBlank")
-  private String password;
+  private String description;
+
+  @NotBlank(message = "NotBlank")
+  private String address;
+
+  private String logo;
 
 }

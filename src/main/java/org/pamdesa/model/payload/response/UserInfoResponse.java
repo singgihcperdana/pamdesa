@@ -14,5 +14,6 @@ public class UserInfoResponse {
   private String fullName;
   private String phoneNumber;
   private String address;
-  private List<String> roles;
+  private String role;
+  private String organizationName;
 }

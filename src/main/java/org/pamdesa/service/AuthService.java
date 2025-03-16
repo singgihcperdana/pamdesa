@@ -2,10 +2,14 @@ package org.pamdesa.service;
 
 import lombok.RequiredArgsConstructor;
 import org.pamdesa.helper.JwtHelper;
-import org.pamdesa.model.entity.Role;
+import org.pamdesa.model.entity.Organization;
 import org.pamdesa.model.entity.User;
+import org.pamdesa.model.enums.ErrorCode;
+import org.pamdesa.model.enums.UserRole;
+import org.pamdesa.model.error.ClientException;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.request.SignupRequest;
+import org.pamdesa.repository.OrganizationRepository;
 import org.pamdesa.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,8 @@ public class AuthService {
   private final JwtHelper jwtHelper;
 
   private final UserRepository userRepository;
+
+  private final OrganizationRepository organizationRepository;
 
   private final ValidTokenService validTokenService;
 
@@ -54,13 +59,18 @@ public class AuthService {
 
   public User signup(SignupRequest request) {
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    Organization organization = organizationRepository.findById(request.getOrganizationId())
+        .orElseThrow(() -> new ClientException(ErrorCode.DATA_NOT_FOUND));
     return userRepository.save(User.builder()
         .email(request.getEmail())
-            .active(Boolean.TRUE)
+            .active(Boolean.FALSE)
             .username(request.getUsername())
             .password(encoder.encode(request.getPassword()))
             .fullName(request.getFullName())
             .phoneNumber(request.getPhoneNumber())
+            .userRole(UserRole.CUSTOMER)
+            .organization(organization)
+            .address(request.getAddress())
         .build());
   }
 

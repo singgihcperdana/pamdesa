@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +35,16 @@ public class UserService implements UserDetailsService {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User user = userRepository.findByUsername(userDetails.getUsername()).orElse(new User());
-    return UserInfoResponse.builder().id(user.getId()).username(user.getUsername())
-        .email(user.getEmail()).phoneNumber(user.getPhoneNumber()).address(user.getAddress())
-        .fullName(user.getFullName()).roles(
-            userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList())).build();
+    return UserInfoResponse.builder()
+        .id(user.getId())
+        .username(user.getUsername())
+        .email(user.getEmail())
+        .phoneNumber(user.getPhoneNumber())
+        .address(user.getAddress())
+        .fullName(user.getFullName())
+        .role(user.getUserRole().name())
+        .organizationName(user.getOrganization().getName())
+        .build();
   }
 
 }
