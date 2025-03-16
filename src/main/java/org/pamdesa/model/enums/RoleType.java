@@ -1,6 +1,6 @@
 package org.pamdesa.model.enums;
 
-public enum UserRole {
+public enum RoleType {
 
   SUPERUSER,
   ADMIN,

@@ -5,9 +5,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pamdesa.model.entity.base.BaseEntity;
-import org.pamdesa.model.enums.UserRole;
+import org.pamdesa.model.enums.RoleType;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -15,8 +25,12 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "username"),
-    @UniqueConstraint(columnNames = "email"), @UniqueConstraint(columnNames = "phone_number")})
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "username"),
+    @UniqueConstraint(columnNames = "email"),
+    @UniqueConstraint(columnNames = "phone_number"),
+    @UniqueConstraint(columnNames = "meter_id")
+})
 @Data
 @Builder
 @AllArgsConstructor
@@ -51,13 +65,20 @@ public class User extends BaseEntity implements Serializable {
 
   private boolean active;
 
+  @Column(name = "meter_id")
+  private String meterId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "rate_id")
+  private Rate rate;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "organization_id", nullable = false)
   private Organization organization;
 
-  @Column(name = "user_role")
+  @Column(name = "role_type")
   @Enumerated(EnumType.STRING)
-  private UserRole userRole;
+  private RoleType roleType;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ValidToken> validTokens;

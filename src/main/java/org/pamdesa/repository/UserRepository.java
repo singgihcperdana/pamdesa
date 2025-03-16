@@ -12,7 +12,12 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
   @Transactional
-  @Query("SELECT u FROM User u LEFT JOIN FETCH u.organization WHERE u.username = ?1")
+  @Query("SELECT u FROM User u "
+      + " LEFT JOIN FETCH u.organization "
+      + " LEFT JOIN FETCH u.rate "
+      + " WHERE u.username = ?1")
+  Optional<User> findByUsernameFetchData(String username);
+
   Optional<User> findByUsername(String username);
 
   Boolean existsByUsername(String username);
