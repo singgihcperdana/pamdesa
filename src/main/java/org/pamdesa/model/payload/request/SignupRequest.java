@@ -10,10 +10,6 @@ import javax.validation.constraints.Size;
 @Data
 public class SignupRequest extends CreateCustomerRequest {
 
-  @NotBlank
-  @Size(min = 3, max = 20)
-  private String username;
-
   @Size(max = 50)
   @Email
   private String email;

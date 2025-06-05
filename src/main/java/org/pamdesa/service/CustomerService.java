@@ -6,8 +6,9 @@ import org.pamdesa.helper.ResponseWebHelper;
 import org.pamdesa.model.entity.Rate;
 import org.pamdesa.model.entity.User;
 import org.pamdesa.model.enums.ErrorCode;
-import org.pamdesa.model.enums.RoleType;
+import org.pamdesa.model.enums.UserRole;
 import org.pamdesa.model.error.ClientException;
+import org.pamdesa.model.payload.request.BindAccountRequest;
 import org.pamdesa.model.payload.request.CreateCustomerRequest;
 import org.pamdesa.model.payload.response.UserInfoResponse;
 import org.pamdesa.repository.RateRepository;
@@ -26,8 +27,8 @@ public class CustomerService {
   private final RateRepository rateRepository;
 
   public User createCustomer(CreateCustomerRequest request) {
-    User currentUser = this.getAndValidateCurrentUser();
-    if(currentUser.getRoleType() != RoleType.ADMIN) {
+    User adminUser = this.getAndValidateAdminUser();
+    if(adminUser.getUserRole() != UserRole.ADMIN) {
       log.error("#createCustomer role not valid");
       throw new ClientException(ErrorCode.BAD_CREDENTIAL);
     }
@@ -38,26 +39,34 @@ public class CustomerService {
             .meterId(request.getMeterId())
             .address(request.getAddress())
             .fullName(request.getFullName())
-            .roleType(RoleType.CUSTOMER)
+            .userRole(UserRole.CUSTOMER)
             .rate(rate)
-            .organization(currentUser.getOrganization())
+            .organization(adminUser.getOrganization())
         .build());
   }
 
   public UserInfoResponse findCustomerById(String customerId) {
-    User currentUser = this.getAndValidateCurrentUser();
-    User customer = userRepository.findByIdAndOrganization_Id(customerId, currentUser.getOrganization().getId())
+    User adminUser = this.getAndValidateAdminUser();
+    User customer = userRepository.findByIdAndOrganization_Id(customerId, adminUser.getOrganization().getId())
         .orElseThrow(() -> new ClientException(ErrorCode.DATA_NOT_FOUND));
     return ResponseWebHelper.toUserInfoResponse(customer);
   }
 
-  private User getAndValidateCurrentUser() {
-    User currentUser = userService.getCurrentUser();
-    if(currentUser.getRoleType() != RoleType.ADMIN) {
+  public User bindAccount(BindAccountRequest request) {
+    User adminUser = this.getAndValidateAdminUser();
+    User customer = userRepository.findByMeterIdAndOrganization_Id(request.getMeterId(), adminUser.getOrganization().getId())
+        .orElseThrow(() -> new ClientException(ErrorCode.DATA_NOT_FOUND));
+    customer.setEmail(customer.getEmail());
+    return userRepository.save(customer);
+  }
+
+  private User getAndValidateAdminUser() {
+    User adminUser = userService.getCurrentUser();
+    if(adminUser.getUserRole() != UserRole.ADMIN) {
       log.error("#getAndValidateCurrentUser role not valid");
       throw new ClientException(ErrorCode.BAD_CREDENTIAL);
     }
-    return currentUser;
+    return adminUser;
   }
 
 }

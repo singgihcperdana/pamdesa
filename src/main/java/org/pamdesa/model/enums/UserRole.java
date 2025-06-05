@@ -1,9 +1,10 @@
 package org.pamdesa.model.enums;
 
-public enum RoleType {
+public enum UserRole {
 
   SUPERUSER,
   ADMIN,
-  CUSTOMER
+  CUSTOMER,
+  OPERATOR
 
 }

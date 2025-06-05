@@ -5,7 +5,7 @@ import org.pamdesa.helper.JwtHelper;
 import org.pamdesa.model.entity.Organization;
 import org.pamdesa.model.entity.User;
 import org.pamdesa.model.enums.ErrorCode;
-import org.pamdesa.model.enums.RoleType;
+import org.pamdesa.model.enums.UserRole;
 import org.pamdesa.model.error.ClientException;
 import org.pamdesa.model.payload.request.LoginRequest;
 import org.pamdesa.model.payload.request.SignupRequest;
@@ -47,7 +47,7 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(authenticate);
 
     UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
-    userRepository.findByUsername(userDetails.getUsername())
+    userRepository.findByEmail(userDetails.getUsername())
         .ifPresent(user -> validTokenService.saveToken(token, expirationTime, user));
     return token;
   }
@@ -65,11 +65,10 @@ public class AuthService {
         .email(request.getEmail())
             .active(Boolean.FALSE)
             .meterId(request.getMeterId())
-            .username(request.getUsername())
             .password(encoder.encode(request.getPassword()))
             .fullName(request.getFullName())
             .phoneNumber(request.getPhoneNumber())
-            .roleType(RoleType.CUSTOMER)
+            .userRole(UserRole.CUSTOMER)
             .organization(organization)
             .address(request.getAddress())
         .build());

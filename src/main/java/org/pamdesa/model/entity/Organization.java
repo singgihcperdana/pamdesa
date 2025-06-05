@@ -23,6 +23,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Organization extends BaseEntity implements Serializable {
 
+  @Size(max = 10)
+  private String code;
+
   @Size(max = 100)
   private String name;
 

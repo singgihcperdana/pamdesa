@@ -15,14 +15,13 @@ public interface UserRepository extends JpaRepository<User, String> {
   @Query("SELECT u FROM User u "
       + " LEFT JOIN FETCH u.organization "
       + " LEFT JOIN FETCH u.rate "
-      + " WHERE u.username = ?1")
-  Optional<User> findByUsernameFetchData(String username);
+      + " WHERE u.email = ?1")
+  Optional<User> findByEmailFetchData(String username);
 
-  Optional<User> findByUsername(String username);
-
-  Boolean existsByUsername(String username);
-
-  Boolean existsByEmail(String email);
+  Optional<User> findByEmail(String email);
 
   Optional<User> findByIdAndOrganization_Id(String id, String organizationId);
+
+  Optional<User> findByMeterIdAndOrganization_Id(String meterId, String organizationId);
+
 }

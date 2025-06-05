@@ -1,6 +1,7 @@
 package org.pamdesa;
 
 import org.pamdesa.model.properties.AccessRulesProperties;
+import org.pamdesa.model.properties.AuthProperties;
 import org.pamdesa.model.properties.VersionProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties({AccessRulesProperties.class, VersionProperties.class})
+@EnableConfigurationProperties({AccessRulesProperties.class, VersionProperties.class, AuthProperties.class})
 public class Main {
   public static void main(String[] args) {
     SpringApplication.run(Main.class, args);

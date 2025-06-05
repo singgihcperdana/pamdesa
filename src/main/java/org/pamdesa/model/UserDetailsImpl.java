@@ -20,7 +20,8 @@ public class UserDetailsImpl implements UserDetails {
 
   private static boolean active = false;
 
-  @JsonIgnore private final String password;
+  @JsonIgnore
+  private final String password;
 
   private final Collection<? extends GrantedAuthority> authorities;
 
@@ -34,9 +35,8 @@ public class UserDetailsImpl implements UserDetails {
 
   public static UserDetailsImpl build(User user) {
     active = user.isActive();
-    List<GrantedAuthority> authorities =
-        List.of(new SimpleGrantedAuthority(user.getRoleType().name()));
-    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
+    return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(),
+        List.of(new SimpleGrantedAuthority(user.getUserRole().name())));
   }
 
   @Override

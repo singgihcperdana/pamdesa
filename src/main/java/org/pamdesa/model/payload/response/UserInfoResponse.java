@@ -9,11 +9,11 @@ public class UserInfoResponse {
   private String id;
   private String meterId;
   private String rateId;
-  private String username;
   private String email;
   private String fullName;
   private String phoneNumber;
   private String address;
   private String role;
+  private String organizationCode;
   private String organizationName;
 }

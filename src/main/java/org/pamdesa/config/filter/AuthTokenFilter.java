@@ -68,11 +68,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     String jwt;
-    String username;
+    String email;
 
     try {
       jwt = token.substring(7);
-      username = jwtHelper.extractUsername(jwt);
+      email = jwtHelper.extractUsername(jwt);
     } catch (Exception e) {
       log.warn("error extractUsername from jwt: {}", e.getMessage());
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -81,7 +81,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       return;
     }
 
-    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       if (!tokenService.isTokenExistInDB(jwt)) {
         log.warn("token not exist in DB");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -91,8 +91,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         return;
       }
 
-      if (jwtHelper.validateToken(jwt, username)) {
-        var userDetails = userService.loadUserByUsername(username);
+      if (jwtHelper.validateToken(jwt, email)) {
+        var userDetails = userService.loadUserByUsername(email);
 
         if (!isAuthorizedPath(userDetails, requestPath, requestMethod)) {
           response.setStatus(HttpServletResponse.SC_FORBIDDEN);

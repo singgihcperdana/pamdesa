@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.pamdesa.helper.ResponseHelper;
 import org.pamdesa.model.constant.AppPath;
 import org.pamdesa.model.entity.User;
+import org.pamdesa.model.payload.request.BindAccountRequest;
 import org.pamdesa.model.payload.request.CreateCustomerRequest;
 import org.pamdesa.model.payload.response.Response;
 import org.pamdesa.model.payload.response.UserInfoResponse;
@@ -31,6 +32,14 @@ public class AdminCustomerController {
     log.info("#createCustomer request: {}", request);
     User customer = customerService.createCustomer(request);
     log.info("#createCustomer response userId: {}", customer.getId());
+    return ResponseHelper.ok(customer.getId());
+  }
+
+  @PostMapping
+  public Response<String> bindAccount(@Validated @RequestBody BindAccountRequest request) {
+    log.info("#bindAccount request: {}", request);
+    User customer = customerService.bindAccount(request);
+    log.info("#bindAccount response userId: {}", customer.getId());
     return ResponseHelper.ok(customer.getId());
   }
 

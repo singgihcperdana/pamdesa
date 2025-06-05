@@ -10,6 +10,8 @@ import org.pamdesa.model.payload.response.OrganizationResponse;
 import org.pamdesa.repository.OrganizationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,6 +25,7 @@ public class OrganizationService {
       throw new ClientException(ErrorCode.DATA_ALREADY_EXIST);
     }
     return organizationRepository.save(Organization.builder()
+            .code(this.resolveCode())
             .address(request.getAddress())
             .description(request.getDescription())
             .name(request.getName())
@@ -30,10 +33,15 @@ public class OrganizationService {
         .build());
   }
 
+  private String resolveCode() {
+    return UUID.randomUUID().toString();
+  }
+
   public OrganizationResponse findById(String id) {
     return organizationRepository.findById(id)
         .map(organization -> OrganizationResponse.builder()
             .id(organization.getId())
+            .code(organization.getCode())
             .description(organization.getDescription())
             .logo(organization.getLogo())
             .name(organization.getName())

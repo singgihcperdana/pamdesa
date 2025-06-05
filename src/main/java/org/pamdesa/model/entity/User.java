@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.pamdesa.model.entity.base.BaseEntity;
-import org.pamdesa.model.enums.RoleType;
+import org.pamdesa.model.enums.UserRole;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,10 +36,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity implements Serializable {
-
-  @NotBlank
-  @Size(max = 20)
-  private String username;
 
   @NotBlank
   @Size(max = 50)
@@ -76,9 +72,9 @@ public class User extends BaseEntity implements Serializable {
   @JoinColumn(name = "organization_id", nullable = false)
   private Organization organization;
 
-  @Column(name = "role_type")
+  @Column(name = "user_role")
   @Enumerated(EnumType.STRING)
-  private RoleType roleType;
+  private UserRole userRole;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ValidToken> validTokens;

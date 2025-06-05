@@ -12,12 +12,13 @@ public class ResponseWebHelper {
         .id(user.getId())
         .rateId(CommonHelper.transformOrElseNull(user.getRate(), Rate::getId))
         .meterId(user.getMeterId())
-        .username(user.getUsername())
         .email(user.getEmail())
         .phoneNumber(user.getPhoneNumber())
         .address(user.getAddress())
         .fullName(user.getFullName())
-        .role(user.getRoleType().name())
+        .role(user.getUserRole().name())
+        .organizationCode(CommonHelper.transformOrElseNull(
+            user.getOrganization(), Organization::getCode))
         .organizationName(CommonHelper.transformOrElseNull(
             user.getOrganization(), Organization::getName))
         .build();

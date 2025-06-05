@@ -9,6 +9,8 @@ public class OrganizationResponse {
 
   private String id;
 
+  private String code;
+
   private String name;
 
   private String description;
