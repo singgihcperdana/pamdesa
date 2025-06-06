@@ -19,13 +19,13 @@ public class CustomerController {
   @GetMapping(AppPath.CUSTOMER_HELLO)
   public ResponseEntity<String> getHelloPage() {
     UserInfoResponse current = userService.getCurrent();
-    return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
+    return ResponseEntity.ok("Welcome customer " + current.getFullName() + "!");
   }
 
   @PostMapping(AppPath.CUSTOMER_HELLO)
   public ResponseEntity<String> postHelloPage() {
     UserInfoResponse current = userService.getCurrent();
-    return ResponseEntity.ok("Welcome customer " + current.getUsername() + "!");
+    return ResponseEntity.ok("Welcome customer " + current.getFullName() + "!");
   }
 
   @GetMapping(AppPath.CUSTOMER_ORDER)

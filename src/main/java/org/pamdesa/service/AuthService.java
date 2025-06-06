@@ -49,6 +49,7 @@ public class AuthService {
     UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
     userRepository.findByEmail(userDetails.getUsername())
         .ifPresent(user -> validTokenService.saveToken(token, expirationTime, user));
+    SecurityContextHolder.clearContext();
     return token;
   }
 

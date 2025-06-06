@@ -26,7 +26,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email"),
     @UniqueConstraint(columnNames = "phone_number"),
     @UniqueConstraint(columnNames = "meter_id")

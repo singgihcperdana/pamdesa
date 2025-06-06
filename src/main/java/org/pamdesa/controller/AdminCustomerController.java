@@ -35,7 +35,7 @@ public class AdminCustomerController {
     return ResponseHelper.ok(customer.getId());
   }
 
-  @PostMapping
+  @PostMapping(AppPath.BIND_ACCOUNT)
   public Response<String> bindAccount(@Validated @RequestBody BindAccountRequest request) {
     log.info("#bindAccount request: {}", request);
     User customer = customerService.bindAccount(request);
